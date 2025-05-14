@@ -1,20 +1,25 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+// Load environment variables from the .env file
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // Enable CORS
-app.use(cors());
+const corsOptions = {
+  origin: 'https://58f8aca4.dailyindiatimes.pages.dev/', // Replace with your frontend domain
+};
+app.use(cors(corsOptions));
 
 // API route to fetch news from NewsAPI
 app.get('/api/news', async (req, res) => {
   const { q, page, pageSize } = req.query;
 
-  const apiKey = '3f906f326f62466b937ed1e947ef6e54'; // Replace with your NewsAPI key
- const url = `https://newsapi.org/v2/everything?q=${q}&page=${page}&pageSize=${pageSize}&apiKey=3f906f326f62466b937ed1e947ef6e54`;
+  const apiKey = process.env.NEWS_API_KEY; // Access the API key from environment variables
 
+  const url = `https://newsapi.org/v2/everything?q=${q}&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
 
   try {
     const response = await axios.get(url);
